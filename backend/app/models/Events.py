@@ -9,7 +9,7 @@ class Events(Base):
     __tablename__ = 'events'
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, nullable=False)
-    date: Mapped[date_type] = mapped_column(TIMESTAMPm nullable=False)
+    date: Mapped[date_type] = mapped_column(TIMESTAMP nullable=False)
     title: Mapped[str] = mapped_column(String(70), nullable=False)
     description: Mapped[str] = mapped_column(String(200), nullable=False)
     place: Mapped[str] = mapped_column(String(30), nullable=False)
