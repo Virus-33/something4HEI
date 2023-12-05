@@ -47,13 +47,26 @@ def get_event_by_id(id: int, db: Session=Depends(get_db)):
         )
     return event
 
+@router.get("/type/{type}", response_description="Get events by type", response_model=List[EventPreview], status_code=status.HTTP_200_OK)
+def get_events_by_type(type: str, db: Session=Depends(get_db)):
+
+    stmt = select(EventsModel).where(EventsModel.type == type)
+    events = db.execte(stmt).fetchall()
+
+    if events == []:
+        raise HTTPException(
+            status_code = status.HTTP_404_NOT_FOUND,
+            detail=f"Looks like you've lost! Are you sure about that type {type}?"
+        )
+    return events
+
 @router.post("/", response_description="Create new event", response_model=Event, status_code=status.HTTP_200_OK)
 def create_event(event: BaseEvent, db: Session=Depends(get_db)):
 
     try:
         new_event= db.execute(
             insert(EventsModel).returning(EventsModel),
-            [{**work.model_dump()}]
+            [{**event.model_dump()}]
         ).scalar()
     except:
         db.rollback()
